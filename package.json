@@ -1,0 +1,23 @@
+{
+  "name": "factorio-api-typescript",
+  "version": "0.0.1",
+  "description": "Automatic Factorio API scraper to generate typescript definition to use with TypeScriptToLua",
+  "main": "index.js",
+  "author": {
+    "name": "Lucas Brandstaetter",
+    "email": "lucas@brandstaetter.tech"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Roang-zero1/factorio-api-typescript"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.21.0",
+    "jsdom": "^16.4.0"
+  },
+  "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "typescript": "^4.1.3"
+  }
+}
