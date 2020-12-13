@@ -9,5 +9,6 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
-  "cSpell.words": ["Factorio"]
+  "cSpell.words": ["Factorio"],
+  "prettier.prettierPath": ".yarn/unplugged/prettier-npm-2.2.1-e0670992f8/node_modules/prettier/index.js"
 }
