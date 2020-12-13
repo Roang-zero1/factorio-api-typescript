@@ -1,8 +1,10 @@
 import { ArgumentParser } from "argparse";
 import axois from "axios";
-import { JSDOM } from "jsdom";
 import chalk from "chalk";
-const { version } = require("../package.json");
+import { parseClasses } from "./scrapers/classes";
+
+import { arguments } from "./types";
+const { version } = require("../../package.json");
 
 async function main() {
   const parser = new ArgumentParser({
@@ -23,10 +25,12 @@ async function main() {
     default: "https://lua-api.factorio.com/",
     help: "URL of the website to scrape",
   });
-  const config = parser.parse_args();
+  const config: arguments = parser.parse_args();
   try {
     // Verify parameters by making a simple request to the base URL
-    await axois.get(`${config.url}/${config.api_version}`);
+    await axois.get(`${config.url}${config.api_version}`);
+    const classesPromise = parseClasses(config);
+    Promise.all([classesPromise]);
   } catch (err) {
     let error_messsage = "Unknown error when fetching from API";
     if (err.response) {
