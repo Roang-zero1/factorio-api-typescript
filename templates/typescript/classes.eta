@@ -1,0 +1,9 @@
+<% it.classes.forEach(function(classData){ %>
+/**
+<% if (classData.description) { %> * <%= classData.description %> <% } %>
+ *
+ * @see <%= classData.url %>
+ */
+export class <%= classData.name %> {
+}
+<% }) %>

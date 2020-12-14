@@ -862,6 +862,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"eta@npm:^1.12.1":
+  version: 1.12.1
+  resolution: "eta@npm:1.12.1"
+  checksum: 9a21474b544b596515ab8c4e7131effa36fa650a298ef12bdbe85146f169782315fdad83fc32c653e59629b441b7bfe2f98e1d1ed84705062fddcdc5701412f5
+  languageName: node
+  linkType: hard
+
 "extend@npm:~3.0.2":
   version: 3.0.2
   resolution: "extend@npm:3.0.2"
@@ -898,6 +905,7 @@ __metadata:
     eslint: ^7.15.0
     eslint-config-prettier: ^7.0.0
     eslint-plugin-prettier: ^3.2.0
+    eta: ^1.12.1
     jsdom: ^16.4.0
     prettier: ^2.2.1
     typescript: ^4.1.3

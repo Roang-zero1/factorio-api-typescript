@@ -1,6 +1,7 @@
 import { ArgumentParser } from "argparse";
 import axois from "axios";
 import chalk from "chalk";
+import { writeClassesDefinition } from "./writer/typescript/classes";
 import { parseClasses } from "./scrapers/classes";
 
 import { arguments } from "./types";
@@ -31,6 +32,7 @@ async function main() {
     await axois.get(`${config.url}${config.api_version}`);
     const classesPromise = parseClasses(config);
     Promise.all([classesPromise]);
+    writeClassesDefinition(await classesPromise);
   } catch (err) {
     let error_messsage = "Unknown error when fetching from API";
     if (err.response) {
