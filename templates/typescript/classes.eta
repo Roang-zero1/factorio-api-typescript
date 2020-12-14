@@ -4,6 +4,9 @@
  *
  * @see <%= classData.url %>
  */
-export class <%= classData.name %> {
+interface <%= classData.name %> {
+  <% classData.members.forEach(function(member){ %>
+    <%= member%>:void;
+  <% }) %>
 }
 <% }) %>
