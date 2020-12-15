@@ -1,11 +1,10 @@
-import Axios from "axios";
 import { JSDOM } from "jsdom";
 import { arguments, factorioClass } from "../types";
 
-let baseURL = "";
-const classesURL = "Classes.html";
+const classesURL = "/Classes.html";
 
 async function parseClass(
+  config: arguments,
   tableRow: HTMLTableRowElement,
 ): Promise<factorioClass> {
   const name = tableRow.querySelector("a")?.textContent;
@@ -21,7 +20,7 @@ async function parseClass(
     throw `Cannot find further information URL for class ${name}`;
   }
   const { document } = new JSDOM(
-    await (await Axios.get(`${baseURL}${classURL}`)).data,
+    await (await config.api.get(`${classURL}`)).data,
   ).window;
   const members: string[] = [];
 
@@ -36,7 +35,7 @@ async function parseClass(
     return {
       name,
       description,
-      url: `${baseURL}${classHREF}`,
+      url: `${config.api.defaults.baseURL}/${classHREF}`,
       members,
     };
   }
@@ -44,15 +43,14 @@ async function parseClass(
 }
 
 export async function parseClasses(config: arguments): Promise<any> {
-  baseURL = `${config.url}${config.api_version}/`;
   const { document } = new JSDOM(
-    (await Axios.get(`${baseURL}${classesURL}`)).data,
+    (await config.api.get(`${classesURL}`)).data,
   ).window;
   const promises: Promise<factorioClass>[] = [];
   for (const tableRow of document
     .querySelector("body > div.brief-listing")
     ?.querySelectorAll("tr") || []) {
-    promises.push(parseClass(tableRow));
+    promises.push(parseClass(config, tableRow));
   }
   return Promise.all(promises);
 }

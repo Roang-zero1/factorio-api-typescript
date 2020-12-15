@@ -1,10 +1,12 @@
 import { ArgumentParser } from "argparse";
-import axois from "axios";
+import Axios from "axios";
 import chalk from "chalk";
-import { writeClassesDefinition } from "./writer/typescript/classes";
+import fs from "fs";
+import { resolve } from "path";
 import { parseClasses } from "./scrapers/classes";
-
 import { arguments } from "./types";
+import { writeClassesDefinition } from "./writer/typescript/classes";
+
 const { version } = require("../../package.json");
 
 async function main() {
@@ -26,19 +28,35 @@ async function main() {
     default: "https://lua-api.factorio.com/",
     help: "URL of the website to scrape",
   });
+  parser.add_argument("--outDir", {
+    type: String,
+    default: "./out",
+    help: "Location of output files",
+  });
   const config: arguments = parser.parse_args();
+  const outDir = resolve(config.outDir);
+  if (!fs.existsSync(outDir)) {
+    fs.mkdirSync(outDir);
+  }
+  if (!config.url.endsWith("/")) {
+    config.url = `${config.url}/`;
+  }
+  config.api = Axios.create({
+    baseURL: `${config.url}${config.api_version}`,
+  });
   try {
     // Verify parameters by making a simple request to the base URL
-    await axois.get(`${config.url}${config.api_version}`);
+    await config.api.get(`${config.url}${config.api_version}`);
     const classesPromise = parseClasses(config);
     Promise.all([classesPromise]);
-    writeClassesDefinition(await classesPromise);
+    writeClassesDefinition(config, await classesPromise);
   } catch (err) {
     let error_messsage = "Unknown error when fetching from API";
     if (err.response) {
       if (err.response.status === 404) {
         error_messsage = "Invalid URL or version provided, 404 returned";
       } else if (err.response.status >= 500 && err.response.status < 600) {
+        console.log(err);
         console.error(
           chalk.red(
             `Server failed with code ${err.response.status} and message:\n${err.response.statusText}`,
@@ -52,7 +70,7 @@ async function main() {
     if (err.code === "ENOTFOUND") {
       error_messsage = "Invalid URL provided, please check URL.";
     }
-
+    console.log(err);
     console.error(chalk.red(error_messsage));
     parser.print_usage();
     process.exit(1);
